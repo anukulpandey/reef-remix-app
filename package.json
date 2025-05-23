@@ -119,6 +119,7 @@
     "@openzeppelin/upgrades-core": "^1.30.0",
     "@openzeppelin/wizard": "0.4.0",
     "@reduxjs/toolkit": "^2.0.1",
+    "@reef-chain/react-lib": "^5.0.2",
     "@remixproject/engine": "0.3.42",
     "@remixproject/engine-electron": "0.3.42",
     "@remixproject/engine-web": "0.3.42",
@@ -128,6 +129,8 @@
     "@remixproject/plugin-utils": "0.3.42",
     "@remixproject/plugin-webview": "0.3.42",
     "@remixproject/plugin-ws": "0.3.42",
+    "@reown/appkit": "^1.7.4",
+    "@reown/appkit-adapter-ethers": "^1.7.4",
     "@ricarso/react-image-magnifiers": "^1.9.0",
     "@types/nightwatch": "^2.3.1",
     "ansi-gray": "^0.1.1",
@@ -228,9 +231,7 @@
     "winston": "^3.3.3",
     "ws": "^8.17.1",
     "xterm": "^5.2.1",
-    "xterm-addon-search": "^0.12.0",
-    "@reown/appkit": "^1.7.4",
-    "@reown/appkit-adapter-ethers": "^1.7.4"
+    "xterm-addon-search": "^0.12.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.19.3",

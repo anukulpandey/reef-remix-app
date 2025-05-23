@@ -79,6 +79,7 @@ import * as remixLib from '@remix-project/remix-lib'
 
 import { QueryParams } from '@remix-project/remix-lib'
 import { SearchPlugin } from './app/tabs/search'
+import { ReefPlugin } from './app/tabs/reef'
 import { ScriptRunnerBridgePlugin } from './app/plugins/script-runner-bridge'
 import { ElectronProvider } from './app/files/electronProvider'
 
@@ -105,6 +106,7 @@ import Editor from './app/editor/editor'
 import Terminal from './app/panels/terminal'
 import TabProxy from './app/panels/tab-proxy.js'
 import { Plugin } from '@remixproject/engine'
+import { IframePlugin } from '@remixproject/engine-web'
 
 const _paq = (window._paq = window._paq || [])
 
@@ -287,6 +289,8 @@ class AppComponent {
     //----- search
     const search = new SearchPlugin()
 
+    //----- reef
+    const reef = new ReefPlugin()
     //---------------- Script Runner UI Plugin -------------------------
     const scriptRunnerUI = new ScriptRunnerBridgePlugin(this.engine)
 
@@ -433,6 +437,7 @@ class AppComponent {
       environmentExplorer,
       this.walkthroughService,
       search,
+      reef,
       solidityumlgen,
       compilationDetails,
       vyperCompilationDetails,
@@ -607,7 +612,9 @@ class AppComponent {
     ])
     await this.appManager.activatePlugin(['settings'])
 
-    await this.appManager.activatePlugin(['walkthrough', 'storage', 'search', 'compileAndRun', 'recorder', 'dgitApi', 'dgit'])
+    await this.appManager.activatePlugin(['walkthrough', 'storage', 'search', 'reef',
+      'compileAndRun',
+       'recorder', 'dgitApi', 'dgit'])
     await this.appManager.activatePlugin(['solidity-script', 'remix-templates'])
 
     if (isElectron()) {
