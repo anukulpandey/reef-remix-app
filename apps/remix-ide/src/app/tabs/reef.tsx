@@ -3,7 +3,10 @@ import * as packageJson from '../../../../../package.json';
 import React, { useEffect, useState } from 'react';
 import { hooks } from "@reef-chain/react-lib";
 import { network as nw } from "@reef-chain/util-lib";
-import { Constructor } from "./reef/Constructor";
+import { Constructor } from "./reef/components/Constructor";
+import Loading from './reef/components/common/loading/Loading';
+import {NetworkSelect} from "./NetworkSelect";
+import "./reef.css";
 
 const profile = {
   name: 'reef',
@@ -35,6 +38,8 @@ function ReefTab({ plugin }: { plugin: ReefPlugin }) {
     network: nw.AVAILABLE_NETWORKS.mainnet
   });
 
+  const {signers,selectedReefSigner,loading,error,reefState,network} = reefInit;
+
   const [contracts, setContracts] = useState<any>({});
 
   useEffect(()=>{
@@ -50,9 +55,20 @@ function ReefTab({ plugin }: { plugin: ReefPlugin }) {
     plugin.on("solidity","compilationFinished",initPlugin);
   },[plugin])
 
+  console.log({
+    loading,
+    error,
+    signers,
+    value:loading && !error && signers})
   return (
     <div id="reefTab" style={{ padding: '1rem' }}>
-      <Constructor signers={reefInit.signers ?? []} contracts={contracts} />
+      {network && <NetworkSelect reefState={reefState} network={network}/>}
+      {loading && <Loading/>}
+      {
+        !loading && !error && signers &&  <Constructor signers={signers} selectedSigner={selectedReefSigner} compiledContracts={contracts} contracts={contracts} reefState={reefState}/>
+      }
+      {error && !loading && <div className="text text-danger m-3">{error.message}</div>}
+    
     </div> 
   );
 }
