@@ -1,5 +1,4 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { ReefContract, submitDeploy } from "../../api";
 import { compiledContractError } from "../../store/actions/compiledContracts";
 import { signersBalance } from "../../store/actions/signers";
@@ -10,67 +9,75 @@ import Function from "../Function/Function";
 
 interface ContractDeployProps {
   contractName: string;
+  selectedReefSigner:any;
+  sources:any;
+  contracts:any;
+  reefscanUrl:string;
+  verificationApiUrl:string;
+  notify:any;
 }
 
 interface Contracts {
   [name: string]: ReefContract;
 }
 
-const combineSources = (contracts: Contracts): string => {
-  const sources = Object.keys(contracts).reduce(
-    (prev, key) => ({
-      ...prev,
-      [contracts[key].filename]: contracts[key].source,
-    }),
-    {}
-  );
+const combineSources = (filePath: string, source: any): string => {
+  const sources: Record<string, { content: string }> = {};
+
+  if (source?.sources && filePath in source.sources) {
+    sources[filePath] = {
+      content: source.sources[filePath].content
+    };
+  }
+
   return JSON.stringify(sources);
 };
 
-const ContractDeploy = ({ contractName }: ContractDeployProps) => {
-  const dispatch = useDispatch();
+const getPayload=(contract:any,contractName:string)=>{
+  return {
+    ...contract[contractName]
+  };
+}
 
-  const { provider, reefscanUrl, verificationApiUrl, notify } = useSelector(
-    (state: StateType) => state.utils
-  );
-  const { contracts, errorMessage } = useSelector(
-    (state: StateType) => state.compiledContracts
-  );
-  const { signers, index } = useSelector((state: StateType) => state.signers);
 
-  const signer = signers[index];
-  const contract = contracts[contractName];
-  const constructorAbi = getConstructor(contract.payload.abi);
+const ContractDeploy = ({ contractName,selectedReefSigner,contracts,reefscanUrl,verificationApiUrl ,sources,notify}: ContractDeployProps) => {
+  const signer = selectedReefSigner;
+  const contractPath = contractName.split("|")[1];
+  const contract = contracts[contractPath];
+  const contractNameFromFile = contractName.split("|")[0];
+  
+  const constructorAbi = getConstructor(contract[contractNameFromFile].abi);
   const parameters = getParameters(constructorAbi);
 
-  const source = combineSources(contracts);
+  const source = combineSources(contractPath,sources);
+  const payload = getPayload(contract,contractNameFromFile);
 
   const partialDeployContent = {
     reefscanUrl,
     verificationApiUrl,
-    contractName,
+    contractName:contractPath,
     signer: signer.signer,
-    contract: { ...contract, source },
+    contract: { ...contract, source,payload },
     notify,
-    dispatch,
   };
 
   const submitCollapse = async (values: string[]) => {
     try {
       const params = prepareParameters(values.join(", "));
       await submitDeploy({ ...partialDeployContent, params });
-      dispatch(signersBalance(await provider!.getBalance(signer.evmAddress) as any));
+      // dispatch(signersBalance(await provider!.getBalance(signer.evmAddress) as any));
     } catch (e: any) {
-      dispatch(compiledContractError(e.message ? e.message : e));
+      // dispatch(compiledContractError(e.message ? e.message : e));
     }
   };
   const submitInline = async (value: string) => {
     try {
+
       const params = prepareParameters(value);
       await submitDeploy({ ...partialDeployContent, params });
-      dispatch(signersBalance(await provider!.getBalance(signer.evmAddress) as any));
+      // dispatch(signersBalance(await provider!.getBalance(signer.evmAddress) as any));
     } catch (e: any) {
-      dispatch(compiledContractError(e.message ? e.message : e));
+      // dispatch(compiledContractError(e.message ? e.message : e));
     }
   };
 
@@ -79,7 +86,7 @@ const ContractDeploy = ({ contractName }: ContractDeployProps) => {
       name="Deploy"
       error={true}
       isReturn={true}
-      text={errorMessage}
+      text={"errorMessage"}
       parameters={constructorAbi ? parameters : []}
       submitInline={submitInline}
       submitCollapse={submitCollapse}

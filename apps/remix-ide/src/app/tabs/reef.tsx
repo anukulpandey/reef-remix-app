@@ -7,6 +7,7 @@ import { Constructor } from "./reef/components/Constructor";
 import Loading from './reef/components/common/loading/Loading';
 import {NetworkSelect} from "./NetworkSelect";
 import "./reef.css";
+import { createClient } from '@remixproject/plugin-webview';
 
 const profile = {
   name: 'reef',
@@ -33,7 +34,7 @@ export class ReefPlugin extends ViewPlugin {
   }
 }
 
-function ReefTab({ plugin }: { plugin: ReefPlugin }) {
+function ReefTab({ plugin}: { plugin: ReefPlugin }) {
   const reefInit = hooks.useInitReefState("Reef Remix Plugin", {
     network: nw.AVAILABLE_NETWORKS.mainnet
   });
@@ -41,19 +42,37 @@ function ReefTab({ plugin }: { plugin: ReefPlugin }) {
   const {signers,selectedReefSigner,loading,error,reefState,network} = reefInit;
 
   const [contracts, setContracts] = useState<any>({});
+  const [sources, setSources] = useState<any>({});
 
-  useEffect(()=>{
-    const initPlugin = async()=>{
+  const notify=(message:string)=>{
+    plugin.call('terminal', 'log', {
+      type: 'info',
+      value: message
+    });
+  }
+
+  useEffect(() => {
+    const initPlugin = async (_: any, source: any, languageVersion: string, data: any) => {
       try {
-        const result = await plugin.call('solidity', 'getCompilationResult');
-        setContracts(result.data?result.data.contracts:{});
+        const [evmVersion, version, optimization, runs] = languageVersion.split(";");
+        // const [, compilerVersion] = version.split("-");
+  
+        const parsedContracts = data?.contracts || {};
+        setSources(source)
+        setContracts(parsedContracts);
+  
       } catch (err) {
-        console.error("[REEF PLUGIN] Failed to fetch compiled contracts:", err);
+        console.error("[REEF PLUGIN] Failed to process compiled contract:", err);
       }
-    }
-
-    plugin.on("solidity","compilationFinished",initPlugin);
-  },[plugin])
+    };
+  
+    plugin.on("solidity", "compilationFinished", initPlugin);
+  
+    return () => {
+      plugin.off("solidity", "compilationFinished");
+    };
+  }, [plugin]);
+  
 
   console.log({
     loading,
@@ -65,7 +84,7 @@ function ReefTab({ plugin }: { plugin: ReefPlugin }) {
       {network && <NetworkSelect reefState={reefState} network={network}/>}
       {loading && <Loading/>}
       {
-        !loading && !error && signers &&  <Constructor signers={signers} selectedSigner={selectedReefSigner} compiledContracts={contracts} contracts={contracts} reefState={reefState}/>
+        !loading && !error && signers &&  <Constructor signers={signers} selectedSigner={selectedReefSigner} compiledContracts={contracts} contracts={contracts} reefState={reefState} sources={sources} notify={notify}/>
       }
       {error && !loading && <div className="text text-danger m-3">{error.message}</div>}
     

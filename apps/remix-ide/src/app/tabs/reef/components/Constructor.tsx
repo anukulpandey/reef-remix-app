@@ -14,6 +14,7 @@ import {
 // @ts-ignore
 import { findSigner } from "../utils";
 
+// todo anukulpandey fix this
 const bigNumberToString = (num: BigNumber): string => {
   // const value = formatEther(num);
   // const point = value.indexOf(".");
@@ -35,7 +36,7 @@ const updateContracts = (
     ),
   }));
 
-export const Constructor = ({signers,contracts,compiledContracts,selectedSigner,reefState}:{signers:any[],contracts:any,compiledContracts:any,selectedSigner:any,reefState:any}) => {
+export const Constructor = ({signers,contracts,compiledContracts,selectedSigner,reefState,sources,notify}:{signers:any[],contracts:any,compiledContracts:any,selectedSigner:any,reefState:any,sources:any,notify:any}) => {
   const [selectedContract, setSelectedContract] = useState("");
 
   const account =selectedSigner? selectedSigner.address:"";
@@ -44,6 +45,7 @@ export const Constructor = ({signers,contracts,compiledContracts,selectedSigner,
 
   const setAccount = (value: string) => {
     // const signerIndex = findSigner(signers, value);
+    notify("Switching to ",value)
     reefState.setSelectedAddress(value);
     // dispatch(signersSelect(signerIndex));
     // const newContracts = updateContracts(
@@ -55,24 +57,28 @@ export const Constructor = ({signers,contracts,compiledContracts,selectedSigner,
     // dispatch(contractAddMultiple(newContracts));
   };
 
-  useEffect(() => {
-    const names = Object.keys(contracts);
-    if (names.length > 0) {
-      setSelectedContract(names[0]);
-    }
-  }, [contracts]);
-
   const signerOptions = signers.map(({ name, address, balance }, index) => (
     <option value={address} key={index}>
       {name} - ({bigNumberToString(balance as any)} REEF)
     </option>
   ));
 
-  const contractOptions = Object.keys(contracts).map((contract, index) => (
-    <option value={contract} key={index}>
-      {contract}
-    </option>
-  ));
+  const contractOptions = Object.entries(contracts).flatMap(([filePath, contractMap]) => {
+    return Object.keys(contractMap).map((contractName, index) => (
+      <option value={`${contractName}|${filePath}`} key={`${contractName}-${index}`}>
+        {`${contractName} - ${filePath}`}
+      </option>
+    ));
+  });
+
+  useEffect(() => {
+    if (Object.keys(contracts).length > 0) {
+      const [firstFilePath] = Object.keys(contracts);
+      const firstContractName = Object.keys(contracts[firstFilePath])[0];
+      setSelectedContract(`${firstContractName}|${firstFilePath}`);
+    }
+  }, [contracts]);
+  
 
   return (
     <div className="m-3">
@@ -114,7 +120,7 @@ export const Constructor = ({signers,contracts,compiledContracts,selectedSigner,
 
       {selectedSigner? (
         <>
-          <Deploy contractName={selectedContract} contracts={contracts} deploying={false} />
+          <Deploy contractName={selectedContract} contracts={contracts} deploying={false} selectedReefSigner={selectedSigner} sources={sources} notify={notify} />
           {/* <DeployedContracts /> */}
         </>
       ) : (

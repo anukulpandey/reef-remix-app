@@ -7,10 +7,13 @@ interface DeployInputProps {
   contractName: string;
   deploying:any;
   contracts:any[];
+  selectedReefSigner:any;
+  sources:any;
+  notify:any
 }
 
-const DeployInput = ({contractName,deploying,contracts} : DeployInputProps) => {  
-  const contractExist = contractName in contracts;
+const DeployInput = ({contractName,deploying,contracts,selectedReefSigner,sources,notify} : DeployInputProps) => {  
+  const contractExist = contractName.split("|")[contractName.split("|").length-1] in contracts;
 
   if (deploying) {
     return <Loading />;
@@ -20,13 +23,19 @@ const DeployInput = ({contractName,deploying,contracts} : DeployInputProps) => {
     <div className="mt-3">
       { contractExist &&
         <>
-          {/* <ContractDeploy 
+          <ContractDeploy 
             contractName={contractName}
+            contracts={contracts}
+            reefscanUrl="https://reefscan.com"
+            verificationApiUrl="https://reefscan.com"
+            selectedReefSigner={selectedReefSigner}
+            sources={sources}
+            notify={notify}
             />
           <div className="lead text-color text-center mb-2">
             OR
           </div>
-          <ContractRetrieve
+          {/* <ContractRetrieve
             contractName={contractName}
           /> */}
         </>

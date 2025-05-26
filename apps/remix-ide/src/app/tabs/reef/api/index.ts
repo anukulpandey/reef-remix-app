@@ -90,10 +90,11 @@ export const verifyContract = async (deployedContract: Contract, contract: ReefC
 }
 
 export const deploy = async (compiledContract: CompiledContract, params: any[], signer: Signer): Promise<Contract> => {
-  return ContractFactory
-    .fromSolidity(compiledContract)
-    .connect(signer as any)
-    .deploy(...params);
+  return await ContractFactory
+  .fromSolidity(compiledContract)
+  // @ts-ignore
+  .connect(signer)
+  .deploy(...params);
 }
 
 interface DeployParams {
@@ -103,8 +104,8 @@ interface DeployParams {
   reefscanUrl?: string;
   verificationApiUrl?: string;
   contract: ReefContract,
-  notify: NotifyFun,
-  dispatch: Dispatch<any>
+  notify: any,
+  // dispatch: Dispatch<any>
 }
 
 const deployedNotification = (name: string, address: string, url?: string): string =>
@@ -114,26 +115,28 @@ const deployedNotification = (name: string, address: string, url?: string): stri
 const verificationNofitication = (name: string, result: boolean): string => 
   `<br>Contract ${name} was${result ? "" : " not"} verified!`;
 
-export const submitDeploy = async ({params, signer, contractName, reefscanUrl, verificationApiUrl, contract, dispatch, notify}: DeployParams) => {
+export const submitDeploy = async ({params, signer, contractName, reefscanUrl, verificationApiUrl, contract, notify
+  // dispatch, notify
+}: DeployParams) => {
   try {
-    dispatch(compiledContractDeploying());
+    // dispatch(compiledContractDeploying());
     notify(`Deploying ${contractName} contract...`);
     const deployParams = params.map((param) => (param === "true" || param === "false" ? param === "true" : param));
     const newContract = await deploy(contract.payload, deployParams, signer);
     notify(deployedNotification(
-      contract.contractName,
+      contractName,
       newContract.address as any,
       reefscanUrl
     ));
 
-    verifyContract(newContract, contract,  params, notify, verificationApiUrl);
-    dispatch(contractAdd(contractName, newContract));
-    dispatch(compiledContractDeployed());
+    // verifyContract(newContract, contract,  params, notify, verificationApiUrl);
+    // dispatch(contractAdd(contractName, newContract));
+    // dispatch(compiledContractDeployed());
   } catch (e: any) {
-    console.error(e);
+    console.log(e);
     notify(`Something went wrong... Error: ${e.message}`, "error");
-    dispatch(compiledContractError(typeof e === "string" ? e : e.message));
-    dispatch(compiledContractDeployed());
+    // dispatch(compiledContractError(typeof e === "string" ? e : e.message));
+    // dispatch(compiledContractDeployed());
   }
 }
 
