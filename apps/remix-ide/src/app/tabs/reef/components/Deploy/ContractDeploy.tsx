@@ -81,8 +81,7 @@ const ContractDeploy = ({ contractName,selectedReefSigner,contracts,reefscanUrl,
       await submitDeploy({ ...partialDeployContent, params });
       // dispatch(signersBalance(await provider!.getBalance(signer.evmAddress) as any));
     } catch (e: any) {
-      setError(e.message ? e.message : e);
-      // dispatch(compiledContractError(e.message ? e.message : e));
+      setError(e.message ? e.message : e);// dispatch(compiledContractError(e.message ? e.message : e));
     }
   };
 

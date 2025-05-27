@@ -36,7 +36,7 @@ const updateContracts = (
     ),
   }));
 
-export const Constructor = ({signers,contracts,deployedContracts,selectedSigner,reefState,sources,notify}:{signers:any[],contracts:any,deployedContracts:any,selectedSigner:any,reefState:any,sources:any,notify:any}) => {
+export const Constructor = ({signers,contracts,deployedContracts,selectedSigner,reefState,sources,notify,network}:{signers:any[],contracts:any,deployedContracts:any,selectedSigner:any,reefState:any,sources:any,notify:any,network:any}) => {
   const [selectedContract, setSelectedContract] = useState("");
   const [deploying, setDeploying] = useState(false);
 
@@ -121,7 +121,7 @@ export const Constructor = ({signers,contracts,deployedContracts,selectedSigner,
 
       {selectedSigner? (
         <>
-          <Deploy contractName={selectedContract} contracts={contracts} deploying={deploying} setDeploying={setDeploying} selectedReefSigner={selectedSigner} sources={sources} notify={notify} />
+          <Deploy contractName={selectedContract} contracts={contracts} deploying={deploying} setDeploying={setDeploying} selectedReefSigner={selectedSigner} sources={sources} notify={notify} network={network}/>
           <DeployedContracts contracts={deployedContracts} />
         </>
       ) : (

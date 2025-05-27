@@ -75,6 +75,8 @@ function ReefTab({ plugin}: { plugin: ReefPlugin }) {
       plugin.off("solidity", "compilationFinished");
     };
   }, [plugin]);
+
+  console.log("network===",network);
   
 
   console.log({
@@ -87,7 +89,7 @@ function ReefTab({ plugin}: { plugin: ReefPlugin }) {
       {network && <NetworkSelect reefState={reefState} network={network}/>}
       {loading && <Loading/>}
       {
-        !loading && !error && signers &&  <Constructor signers={signers} selectedSigner={selectedReefSigner} deployedContracts={deployedContracts} contracts={contracts} reefState={reefState} sources={sources} notify={notify}/>
+        !loading && !error && signers &&  <Constructor signers={signers} selectedSigner={selectedReefSigner} deployedContracts={deployedContracts} contracts={contracts} reefState={reefState} sources={sources} notify={notify} network={network}/>
       }
       {error && !loading && <div className="text text-danger m-3">{error.message}</div>}
     

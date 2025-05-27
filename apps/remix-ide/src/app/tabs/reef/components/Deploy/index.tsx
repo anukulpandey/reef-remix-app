@@ -11,9 +11,10 @@ interface DeployInputProps {
   selectedReefSigner:any;
   sources:any;
   notify:any
+  network:any
 }
 
-const DeployInput = ({contractName,deploying,setDeploying,contracts,selectedReefSigner,sources,notify} : DeployInputProps) => {  
+const DeployInput = ({contractName,deploying,setDeploying,contracts,selectedReefSigner,sources,notify,network} : DeployInputProps) => {  
   const contractExist = contractName.split("|")[contractName.split("|").length-1] in contracts;
 
   if (deploying) {
@@ -27,8 +28,8 @@ const DeployInput = ({contractName,deploying,setDeploying,contracts,selectedReef
           <ContractDeploy 
             contractName={contractName}
             contracts={contracts}
-            reefscanUrl="https://reefscan.com"
-            verificationApiUrl="https://reefscan.com"
+            reefscanUrl={network.reefscanUrl}
+            verificationApiUrl={network.verificationApiUrl}
             selectedReefSigner={selectedReefSigner}
             sources={sources}
             notify={notify}
