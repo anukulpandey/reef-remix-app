@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { ReefContract, submitDeploy } from "../../api";
 import { compiledContractError } from "../../store/actions/compiledContracts";
 import { signersBalance } from "../../store/actions/signers";
@@ -15,6 +15,7 @@ interface ContractDeployProps {
   reefscanUrl:string;
   verificationApiUrl:string;
   notify:any;
+  setDeploying:any;
 }
 
 interface Contracts {
@@ -40,7 +41,8 @@ const getPayload=(contract:any,contractName:string)=>{
 }
 
 
-const ContractDeploy = ({ contractName,selectedReefSigner,contracts,reefscanUrl,verificationApiUrl ,sources,notify}: ContractDeployProps) => {
+const ContractDeploy = ({ contractName,selectedReefSigner,contracts,reefscanUrl,verificationApiUrl ,sources,notify,setDeploying}: ContractDeployProps) => {
+  const [error,setError] = useState<string>("");
   const signer = selectedReefSigner;
   const contractPath = contractName.split("|")[1];
   const contract = contracts[contractPath];
@@ -59,6 +61,7 @@ const ContractDeploy = ({ contractName,selectedReefSigner,contracts,reefscanUrl,
     signer: signer.signer,
     contract: { ...contract, source,payload },
     notify,
+    setDeploying
   };
 
   const submitCollapse = async (values: string[]) => {
@@ -68,6 +71,7 @@ const ContractDeploy = ({ contractName,selectedReefSigner,contracts,reefscanUrl,
       // dispatch(signersBalance(await provider!.getBalance(signer.evmAddress) as any));
     } catch (e: any) {
       // dispatch(compiledContractError(e.message ? e.message : e));
+      setError(e.message ? e.message : e);
     }
   };
   const submitInline = async (value: string) => {
@@ -77,6 +81,7 @@ const ContractDeploy = ({ contractName,selectedReefSigner,contracts,reefscanUrl,
       await submitDeploy({ ...partialDeployContent, params });
       // dispatch(signersBalance(await provider!.getBalance(signer.evmAddress) as any));
     } catch (e: any) {
+      setError(e.message ? e.message : e);
       // dispatch(compiledContractError(e.message ? e.message : e));
     }
   };
@@ -84,9 +89,9 @@ const ContractDeploy = ({ contractName,selectedReefSigner,contracts,reefscanUrl,
   return (
     <Function
       name="Deploy"
-      error={true}
+      error={error.length>0}
       isReturn={true}
-      text={"errorMessage"}
+      text={error}
       parameters={constructorAbi ? parameters : []}
       submitInline={submitInline}
       submitCollapse={submitCollapse}

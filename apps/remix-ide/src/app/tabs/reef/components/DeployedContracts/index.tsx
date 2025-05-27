@@ -5,15 +5,15 @@ import { StateType } from "../../store/reducers";
 import ContractView from "./ContractView";
 
 interface DeployedContractsProps {
-
+  contracts:any;
 }
 
-const DeployedContracts = ({} : DeployedContractsProps) => {
-  const dispatch = useDispatch();
-  const { contracts } = useSelector((state: StateType) => state.contracts);
+const DeployedContracts = ({contracts} : DeployedContractsProps) => {
+  console.log("contracts===",contracts)
 
+  // todo anukulpandey clear contracts
   const removeAllContracts = () => 
-    dispatch(contractRemoveAll());
+    console.log("here i am");
 
   const contractViews = contracts
     .map((contract, index) => 

@@ -42,14 +42,17 @@ function ReefTab({ plugin}: { plugin: ReefPlugin }) {
   const {signers,selectedReefSigner,loading,error,reefState,network} = reefInit;
 
   const [contracts, setContracts] = useState<any>({});
+  const [deployedContracts,setDeployedContracts] = useState<any>([]);
   const [sources, setSources] = useState<any>({});
 
-  const notify=(message:string)=>{
-    plugin.call('terminal', 'log', {
-      type: 'info',
+  type NotificationType = 'info' | 'warn' | 'error' | 'success' | 'logHtml';
+
+  const notify = (message: string, type: NotificationType = 'logHtml') => {
+    plugin.call('terminal', type, {
       value: message
     });
   }
+  
 
   useEffect(() => {
     const initPlugin = async (_: any, source: any, languageVersion: string, data: any) => {
@@ -84,7 +87,7 @@ function ReefTab({ plugin}: { plugin: ReefPlugin }) {
       {network && <NetworkSelect reefState={reefState} network={network}/>}
       {loading && <Loading/>}
       {
-        !loading && !error && signers &&  <Constructor signers={signers} selectedSigner={selectedReefSigner} compiledContracts={contracts} contracts={contracts} reefState={reefState} sources={sources} notify={notify}/>
+        !loading && !error && signers &&  <Constructor signers={signers} selectedSigner={selectedReefSigner} deployedContracts={deployedContracts} contracts={contracts} reefState={reefState} sources={sources} notify={notify}/>
       }
       {error && !loading && <div className="text text-danger m-3">{error.message}</div>}
     

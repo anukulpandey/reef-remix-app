@@ -12,11 +12,10 @@ interface ContractViewProps extends ContractHolder {
 
 const ContractView = (params : ContractViewProps) => {
   const [isLoading, setIsLoading] = useState(false);
-  const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
 
-  const onRemove = () =>
-    dispatch(contractRemove(params.index));
+  // todo anukul remove this dispatch
+  const onRemove = () => console.log("sdfsd");
 
   return (
     <div className="mt-1">

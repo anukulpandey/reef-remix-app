@@ -53,7 +53,7 @@ const ContractBody = ({
   isLoading,
   setIsLoading,
 }: ContractBodyProps) => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const [state, setState] = useState<ContractAttributeState[]>([]);
 
@@ -125,7 +125,7 @@ const ContractBody = ({
       const balance = await provider!.getBalance(
         signers.signers[signers.index].evmAddress
       );
-      dispatch(signersBalance(balance as any));
+      // dispatch(signersBalance(balance as any));
     }
   };
 

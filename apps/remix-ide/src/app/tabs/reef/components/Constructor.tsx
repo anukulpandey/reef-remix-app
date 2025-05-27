@@ -36,8 +36,9 @@ const updateContracts = (
     ),
   }));
 
-export const Constructor = ({signers,contracts,compiledContracts,selectedSigner,reefState,sources,notify}:{signers:any[],contracts:any,compiledContracts:any,selectedSigner:any,reefState:any,sources:any,notify:any}) => {
+export const Constructor = ({signers,contracts,deployedContracts,selectedSigner,reefState,sources,notify}:{signers:any[],contracts:any,deployedContracts:any,selectedSigner:any,reefState:any,sources:any,notify:any}) => {
   const [selectedContract, setSelectedContract] = useState("");
+  const [deploying, setDeploying] = useState(false);
 
   const account =selectedSigner? selectedSigner.address:"";
   const evmAddress = selectedSigner? selectedSigner.evmAddress:"";
@@ -120,8 +121,8 @@ export const Constructor = ({signers,contracts,compiledContracts,selectedSigner,
 
       {selectedSigner? (
         <>
-          <Deploy contractName={selectedContract} contracts={contracts} deploying={false} selectedReefSigner={selectedSigner} sources={sources} notify={notify} />
-          {/* <DeployedContracts /> */}
+          <Deploy contractName={selectedContract} contracts={contracts} deploying={deploying} setDeploying={setDeploying} selectedReefSigner={selectedSigner} sources={sources} notify={notify} />
+          <DeployedContracts contracts={deployedContracts} />
         </>
       ) : (
         <div className="text-danger pt-3 text">

@@ -5,14 +5,15 @@ import ContractRetrieve from "./ContractRetrieve";
 
 interface DeployInputProps {
   contractName: string;
-  deploying:any;
+  deploying:boolean;
+  setDeploying:any;
   contracts:any[];
   selectedReefSigner:any;
   sources:any;
   notify:any
 }
 
-const DeployInput = ({contractName,deploying,contracts,selectedReefSigner,sources,notify} : DeployInputProps) => {  
+const DeployInput = ({contractName,deploying,setDeploying,contracts,selectedReefSigner,sources,notify} : DeployInputProps) => {  
   const contractExist = contractName.split("|")[contractName.split("|").length-1] in contracts;
 
   if (deploying) {
@@ -31,6 +32,7 @@ const DeployInput = ({contractName,deploying,contracts,selectedReefSigner,source
             selectedReefSigner={selectedReefSigner}
             sources={sources}
             notify={notify}
+            setDeploying={setDeploying}
             />
           <div className="lead text-color text-center mb-2">
             OR
