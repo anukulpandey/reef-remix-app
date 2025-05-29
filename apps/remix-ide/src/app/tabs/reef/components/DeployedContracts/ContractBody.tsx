@@ -18,6 +18,9 @@ import { prepareParameters } from "../../utils";
 interface ContractBodyProps extends ContractHolder {
   isLoading: boolean;
   setIsLoading: (value: boolean) => void;
+  contracts:any[];
+  notify:any;
+  contract:any;
 }
 
 const isLoadingError = (
@@ -52,19 +55,26 @@ const ContractBody = ({
   contract,
   isLoading,
   setIsLoading,
+  contracts,
+  notify
 }: ContractBodyProps) => {
+  const [state,setState] = useState([]);
   // const dispatch = useDispatch();
 
-  const [state, setState] = useState<ContractAttributeState[]>([]);
+  // const [state, setState] = useState<ContractAttributeState[]>([]);
 
-  const signers = useSelector((state: StateType) => state.signers);
-  const { provider, notify } = useSelector((state: StateType) => state.utils);
-  const { contracts } = useSelector(
-    (state: StateType) => state.compiledContracts
-  );
+  // const signers = useSelector((state: StateType) => state.signers);
+  // const { provider, notify } = useSelector((state: StateType) => state.utils);
+  // const { contracts } = useSelector(
+  //   (state: StateType) => state.compiledContracts
+  // );
+
+  const modifiedContracts = contracts.reduce((acc, { name, contract }) => ({ ...acc, [name]: contract }), {});
+
 
   useEffect(() => {
-    const abi = contracts[name]!.payload.abi.filter(
+    console.log("contracts[name]===",modifiedContracts);
+    const abi = modifiedContracts[name]!.payload.abi.filter(
       (statement) => statement.type === "function"
     )
       .map((statement) => statement as FunctionDescription)
@@ -76,6 +86,7 @@ const ContractBody = ({
     setState([...state.slice(0, index), field, ...state.slice(index + 1)]);
 
   const submitCollapse = (index: number) => async (values: string[]) => {
+    console.log("here i am anukul");
     const field = state[index];
     if (isLoading) {
       updateState(isLoadingError(field), index);
@@ -84,7 +95,7 @@ const ContractBody = ({
 
     try {
       setIsLoading(true);
-      const result = await contract[field.abi.name!](...values);
+      const result = await contract.contract[field.abi.name!](...values);
       const text = await extractResult(result, state[index].abi.outputs);
       notify(createNotification(field.abi.name!, values.join(", "), text));
       updateState({ ...field, text, error: false }, index);
@@ -109,7 +120,7 @@ const ContractBody = ({
     try {
       const parameters = prepareParameters(value);
       setIsLoading(true);
-      const result = await contract[field.abi.name!](...parameters);
+      const result = await contract.contract[field.abi.name!](...parameters);
       const text = await extractResult(result, state[index].abi.outputs);
       notify(createNotification(field.abi.name!, value, text));
       updateState({ ...field, text, error: false }, index);
@@ -117,14 +128,14 @@ const ContractBody = ({
       const message = typeof e === "string" ? e : e.message;
       notify(
         `There was an error in ${field.abi.name} call. Error: ${message}`,
-        "error"
+        "logHtml"
       );
       updateState({ ...field, text: message, error: true }, index);
     } finally {
       setIsLoading(false);
-      const balance = await provider!.getBalance(
-        signers.signers[signers.index].evmAddress
-      );
+      // const balance = await provider!.getBalance(
+      //   signers.signers[signers.index].evmAddress
+      // );
       // dispatch(signersBalance(balance as any));
     }
   };

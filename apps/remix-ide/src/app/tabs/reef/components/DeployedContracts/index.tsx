@@ -6,9 +6,10 @@ import ContractView from "./ContractView";
 
 interface DeployedContractsProps {
   contracts:any;
+  notify:any;
 }
 
-const DeployedContracts = ({contracts} : DeployedContractsProps) => {
+const DeployedContracts = ({contracts,notify} : DeployedContractsProps) => {
   console.log("contracts===",contracts)
 
   // todo anukulpandey clear contracts
@@ -17,7 +18,7 @@ const DeployedContracts = ({contracts} : DeployedContractsProps) => {
 
   const contractViews = contracts
     .map((contract, index) => 
-      (<ContractView {...contract} key={index} index={index} />));
+      (<ContractView contract={contract} contracts={contracts} name={contract.name} notify={notify} key={index} index={index} />));
 
   return (
     <div className="mt-3 pb-2 border-bottom border-secondary">

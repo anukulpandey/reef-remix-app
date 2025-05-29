@@ -108,6 +108,8 @@ interface DeployParams {
   setDeploying: any,
   filename:any;
   compilerState:any;
+  deployedContracts:any[];
+  setDeployedContracts:any;
 }
 
 const deployedNotification = (name: string, address: string, url?: string): string =>
@@ -117,7 +119,7 @@ const deployedNotification = (name: string, address: string, url?: string): stri
 const verificationNofitication = (name: string, result: boolean): string => 
   `<br>Contract ${name} was${result ? "" : " not"} verified!`;
 
-export const submitDeploy = async ({params, signer, contractName, reefscanUrl, verificationApiUrl, contract, notify,setDeploying,filename,compilerState
+export const submitDeploy = async ({params, signer, contractName, reefscanUrl, verificationApiUrl, contract, notify,setDeploying,filename,compilerState,setDeployedContracts,deployedContracts
   // dispatch, notify
 }: DeployParams) => {
   try {
@@ -133,6 +135,11 @@ export const submitDeploy = async ({params, signer, contractName, reefscanUrl, v
     ),"logHtml");
 
     verifyContract(newContract, contract,  params, notify, verificationApiUrl,contractName,filename,compilerState);
+    (newContract as any).payload = contract.payload;
+    setDeployedContracts([...deployedContracts,{
+      name:contractName,
+      contract:newContract
+    }]);
      // dispatch(contractAdd(contractName, newContract));
     setDeploying(false) // dispatch(compiledContractDeployed());
 

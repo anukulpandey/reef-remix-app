@@ -38,6 +38,8 @@ const DeployInput = ({contractName,deploying,setDeploying,contracts,selectedReef
             notify={notify}
             setDeploying={setDeploying}
             compilerState={compilerState}
+            deployedContracts={deployedContracts}
+            setDeployedContracts={setDeployedContracts}
             />
           <div className="lead text-color text-center mb-2">
             OR

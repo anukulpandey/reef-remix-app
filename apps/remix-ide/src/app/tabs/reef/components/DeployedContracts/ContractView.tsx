@@ -8,6 +8,8 @@ import { contractRemove, contractRemoveAll } from "../../store/actions/contracts
 
 interface ContractViewProps extends ContractHolder { 
   index: number;
+  notify:any;
+  contracts:any;
 }
 
 const ContractView = (params : ContractViewProps) => {
@@ -23,11 +25,15 @@ const ContractView = (params : ContractViewProps) => {
       <ContractHeader
         open={open}
         isLoading={isLoading}
-        address={params.contract.address as any}
+        address={(params.contract as any).contract.target as any}
         onRemove={onRemove}
         onClick={() => setOpen(!open)}
       />
-      { open && <ContractBody {...params} isLoading={isLoading} setIsLoading={setIsLoading} /> }
+      { open && <ContractBody {...params} isLoading={isLoading} setIsLoading={setIsLoading}  
+      contracts={params.contracts} 
+      notify={params.notify}
+       contract={params.contract} 
+       name={params.name} />  }
     </div>
   );
 }

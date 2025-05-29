@@ -27,6 +27,7 @@ const ContractRetrieve = ({contractName,selectedReefSigner,contracts,setDeployed
     try {
       const contract = new Contract(address, contractAbi, signer.signer as any);
       setDeployedContracts([...deployedContracts,{
+        name:contractName.split("|")[0],
         contract
       }]);// dispatch(contractAdd(contractName, contract));
     } catch (e) {
