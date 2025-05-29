@@ -37,8 +37,6 @@ export const CompilerDropdown = (props: compilerDropdownProps) => {
   const platform = useContext(platformContext)
   let { customVersions, selectedVersion, defaultVersion, allversions, handleLoadVersion, _shouldBeAdded, onlyDownloaded } = props
 
-  console.log("defaultVersion===",defaultVersion);
-
   // Force default version if none is selected
   if (!selectedVersion && defaultVersion) {
     selectedVersion = defaultVersion
