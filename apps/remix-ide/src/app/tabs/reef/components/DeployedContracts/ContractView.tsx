@@ -2,9 +2,6 @@ import React, { useState } from "react"
 import ContractBody from "./ContractBody";
 import ContractHeader from "./ContractHeader";
 import { ContractHolder } from "../../store/localState";
-import { useDispatch } from "react-redux";
-import { contractRemove, contractRemoveAll } from "../../store/actions/contracts";
-
 
 interface ContractViewProps extends ContractHolder { 
   index: number;

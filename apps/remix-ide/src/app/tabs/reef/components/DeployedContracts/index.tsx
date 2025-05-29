@@ -1,7 +1,4 @@
 import React from "react"
-import { useDispatch, useSelector } from "react-redux";
-import { contractRemoveAll } from "../../store/actions/contracts";
-import { StateType } from "../../store/reducers";
 import ContractView from "./ContractView";
 
 interface DeployedContractsProps {

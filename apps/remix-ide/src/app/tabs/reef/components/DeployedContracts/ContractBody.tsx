@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { StateType } from "../../store/reducers";
 import {
   ABIParameter,
   FunctionDescription,
@@ -59,16 +57,6 @@ const ContractBody = ({
   notify
 }: ContractBodyProps) => {
   const [state,setState] = useState([]);
-  // const dispatch = useDispatch();
-
-  // const [state, setState] = useState<ContractAttributeState[]>([]);
-
-  // const signers = useSelector((state: StateType) => state.signers);
-  // const { provider, notify } = useSelector((state: StateType) => state.utils);
-  // const { contracts } = useSelector(
-  //   (state: StateType) => state.compiledContracts
-  // );
-
   const modifiedContracts = contracts.reduce((acc, { name, contract }) => ({ ...acc, [name]: contract }), {});
 
 
