@@ -57,28 +57,28 @@ const waitUntilContractExists = async (url: string, address: string, steps=20): 
   throw new Error("Contract was not detected");
 }
 
-export const verifyContract = async (deployedContract: Contract, contract: ReefContract, arg: string[], notify: NotifyFun, url?: string): Promise<void> => {
+export const verifyContract = async (deployedContract: Contract, contract: ReefContract, arg: string[], notify: NotifyFun, url?: string,contractName?:string,filename?:string,compilerState?:any): Promise<void> => {
   if (!url) { 
     console.warn("Verification API URL is not set");
     return; 
   }
 
-  notify(`Verifying ${contract.contractName} contract...`);
+  notify(`Verifying ${contractName} contract...`);
   try {
     const body: VerificationContractReq = {
-      address: deployedContract.address as any,
+      address: deployedContract.target as any,
       arguments: JSON.stringify(arg),
-      name: contract.contractName,
-      filename: contract.filename,
-      target: contract.target,
-      source: contract.source,
-      optimization: `${contract.optimization}`,
-      compilerVersion: contract.compilerVersion,
-      license: contract.license,
-      runs: contract.runs
+      name: contractName,
+      filename: filename,
+      target: `${compilerState.evmVersion??'london'}`,
+      source: compilerState.lastCompilationResult.source.sources[filename].content,
+      optimization: `${compilerState.optimize}`,
+      compilerVersion: `v${compilerState.currentVersion}`,
+      license: "unlicense",
+      runs: compilerState.runs
     };
 
-    await waitUntilContractExists(url, deployedContract.address as any);
+    await waitUntilContractExists(url, deployedContract.target as any);
     console.log("Contract was detected");
     await contractVerificatorApi.post<VerificationContractReq, AxiosResponse>
       (`${url}${CONTRACT_VERIFICATION_URL}`, body)
@@ -105,7 +105,9 @@ interface DeployParams {
   verificationApiUrl?: string;
   contract: ReefContract,
   notify: any,
-  setDeploying: any
+  setDeploying: any,
+  filename:any;
+  compilerState:any;
 }
 
 const deployedNotification = (name: string, address: string, url?: string): string =>
@@ -115,7 +117,7 @@ const deployedNotification = (name: string, address: string, url?: string): stri
 const verificationNofitication = (name: string, result: boolean): string => 
   `<br>Contract ${name} was${result ? "" : " not"} verified!`;
 
-export const submitDeploy = async ({params, signer, contractName, reefscanUrl, verificationApiUrl, contract, notify,setDeploying
+export const submitDeploy = async ({params, signer, contractName, reefscanUrl, verificationApiUrl, contract, notify,setDeploying,filename,compilerState
   // dispatch, notify
 }: DeployParams) => {
   try {
@@ -124,21 +126,19 @@ export const submitDeploy = async ({params, signer, contractName, reefscanUrl, v
     const deployParams = params.map((param) => (param === "true" || param === "false" ? param === "true" : param));
     const newContract = await deploy(contract.payload, deployParams, signer);
 
-    console.log("newContract===",newContract);
-
     notify(deployedNotification(
       contractName,
       newContract.target as any,
       reefscanUrl
     ),"logHtml");
 
-    verifyContract(newContract, contract,  params, notify, verificationApiUrl);
-    // dispatch(contractAdd(contractName, newContract));
+    verifyContract(newContract, contract,  params, notify, verificationApiUrl,contractName,filename,compilerState);
+     // dispatch(contractAdd(contractName, newContract));
     setDeploying(false) // dispatch(compiledContractDeployed());
 
   } catch (e: any) {
     console.log(e);
-    notify(`Something went wrong... Error: ${e.message}`, "error");
+    notify(`Something went wrong... Error: ${e.message}`);
     // dispatch(compiledContractError(typeof e === "string" ? e : e.message));
     // dispatch(compiledContractDeployed());
     setDeploying(false)

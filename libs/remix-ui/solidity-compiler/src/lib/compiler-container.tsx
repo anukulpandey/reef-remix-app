@@ -379,6 +379,8 @@ export const CompilerContainer = (props: CompilerContainerProps) => {
         const pragma = pragmaStr.substring(0, pragmaStr.length - 1)
         const releasedVersions = solJsonBinData.selectorList.filter((obj) => !obj.prerelease).map((obj) => obj.version)
         const allVersions = solJsonBinData.selectorList.map((obj) => _retrieveVersion(obj.version))
+
+        console.log("allVersions===",allVersions)
         const currentCompilerName = _retrieveVersion(state.selectedVersion)
         // contains only numbers part, for example '0.4.22'
         const pureVersion = _retrieveVersion()

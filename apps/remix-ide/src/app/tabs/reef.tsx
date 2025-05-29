@@ -42,10 +42,11 @@ function ReefTab({ plugin}: { plugin: ReefPlugin }) {
   const {signers,selectedReefSigner,loading,error,reefState,network} = reefInit;
 
   const [contracts, setContracts] = useState<any>({});
+  const [compilerState, setCompilerState] = useState<any>({});
   const [deployedContracts,setDeployedContracts] = useState<any>([]);
   const [sources, setSources] = useState<any>({});
 
-  type NotificationType = 'info' | 'warn' | 'error' | 'success' | 'logHtml';
+  type NotificationType = 'info' | 'warn'  | 'success' | 'logHtml';
 
   const notify = (message: string, type: NotificationType = 'logHtml') => {
     plugin.call('terminal', type, {
@@ -55,11 +56,12 @@ function ReefTab({ plugin}: { plugin: ReefPlugin }) {
   
 
   useEffect(() => {
-    const initPlugin = async (_: any, source: any, languageVersion: string, data: any) => {
+    const initPlugin = async (file, source, languageVersion, data, input, version) => {
       try {
-        const [evmVersion, version, optimization, runs] = languageVersion.split(";");
-        // const [, compilerVersion] = version.split("-");
-  
+        const compilerState = await plugin.call("solidity","getCompilerState");
+
+        console.log("compilerState===",compilerState);
+        setCompilerState(compilerState);
         const parsedContracts = data?.contracts || {};
         setSources(source)
         setContracts(parsedContracts);
@@ -75,8 +77,6 @@ function ReefTab({ plugin}: { plugin: ReefPlugin }) {
       plugin.off("solidity", "compilationFinished");
     };
   }, [plugin]);
-
-  console.log("network===",network);
   
 
   console.log({
@@ -89,7 +89,7 @@ function ReefTab({ plugin}: { plugin: ReefPlugin }) {
       {network && <NetworkSelect reefState={reefState} network={network}/>}
       {loading && <Loading/>}
       {
-        !loading && !error && signers &&  <Constructor signers={signers} selectedSigner={selectedReefSigner} deployedContracts={deployedContracts} contracts={contracts} reefState={reefState} sources={sources} notify={notify} network={network}/>
+        !loading && !error && signers &&  <Constructor signers={signers} selectedSigner={selectedReefSigner} deployedContracts={deployedContracts} contracts={contracts} reefState={reefState} sources={sources} notify={notify} network={network} setDeployedContracts={setDeployedContracts} compilerState={compilerState}/>
       }
       {error && !loading && <div className="text text-danger m-3">{error.message}</div>}
     

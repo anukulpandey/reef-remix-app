@@ -10,11 +10,14 @@ interface DeployInputProps {
   contracts:any[];
   selectedReefSigner:any;
   sources:any;
-  notify:any
-  network:any
+  notify:any;
+  network:any;
+  deployedContracts:any;
+  setDeployedContracts:any;
+  compilerState:any;
 }
 
-const DeployInput = ({contractName,deploying,setDeploying,contracts,selectedReefSigner,sources,notify,network} : DeployInputProps) => {  
+const DeployInput = ({contractName,deploying,setDeploying,contracts,selectedReefSigner,sources,notify,network,deployedContracts,setDeployedContracts,compilerState} : DeployInputProps) => {  
   const contractExist = contractName.split("|")[contractName.split("|").length-1] in contracts;
 
   if (deploying) {
@@ -34,13 +37,18 @@ const DeployInput = ({contractName,deploying,setDeploying,contracts,selectedReef
             sources={sources}
             notify={notify}
             setDeploying={setDeploying}
+            compilerState={compilerState}
             />
           <div className="lead text-color text-center mb-2">
             OR
           </div>
-          {/* <ContractRetrieve
+          <ContractRetrieve
             contractName={contractName}
-          /> */}
+            deployedContracts={deployedContracts}
+            setDeployedContracts={setDeployedContracts}
+            contracts={contracts}
+            selectedReefSigner={selectedReefSigner}
+          />
         </>
       }
     </div>

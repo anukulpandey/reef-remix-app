@@ -16,6 +16,7 @@ interface ContractDeployProps {
   verificationApiUrl:string;
   notify:any;
   setDeploying:any;
+  compilerState:any;
 }
 
 interface Contracts {
@@ -41,7 +42,7 @@ const getPayload=(contract:any,contractName:string)=>{
 }
 
 
-const ContractDeploy = ({ contractName,selectedReefSigner,contracts,reefscanUrl,verificationApiUrl ,sources,notify,setDeploying}: ContractDeployProps) => {
+const ContractDeploy = ({ contractName,selectedReefSigner,contracts,reefscanUrl,verificationApiUrl ,sources,notify,setDeploying,compilerState}: ContractDeployProps) => {
   const [error,setError] = useState<string>("");
   const signer = selectedReefSigner;
   const contractPath = contractName.split("|")[1];
@@ -57,11 +58,13 @@ const ContractDeploy = ({ contractName,selectedReefSigner,contracts,reefscanUrl,
   const partialDeployContent = {
     reefscanUrl,
     verificationApiUrl,
-    contractName:contractPath,
+    contractName:contractNameFromFile,
+    filename:contractPath,
     signer: signer.signer,
     contract: { ...contract, source,payload },
     notify,
-    setDeploying
+    setDeploying,
+    compilerState
   };
 
   const submitCollapse = async (values: string[]) => {

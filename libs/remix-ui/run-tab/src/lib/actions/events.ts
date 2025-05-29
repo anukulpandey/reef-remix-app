@@ -230,6 +230,7 @@ const migrateSavedContracts = async (plugin) => {
 const broadcastCompilationResult = async (compilerName: string, plugin: RunTab, dispatch: React.Dispatch<any>, file, source, languageVersion, data, input?) => {
   _paq.push(['trackEvent', 'udapp', 'broadcastCompilationResult', compilerName])
   // TODO check whether the tab is configured
+
   const compiler = new CompilerAbstract(languageVersion, data, source, input)
   plugin.compilersArtefacts[languageVersion] = compiler
   plugin.compilersArtefacts.__last = compiler
