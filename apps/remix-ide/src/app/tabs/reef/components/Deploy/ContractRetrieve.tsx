@@ -26,6 +26,9 @@ const ContractRetrieve = ({contractName,selectedReefSigner,contracts,setDeployed
     setErrorMessage("");
     try {
       const contract = new Contract(address, contractAbi, signer.signer as any);
+      (contract as any).payload = {
+        abi:contractAbi
+      };
       setDeployedContracts([...deployedContracts,{
         name:contractName.split("|")[0],
         contract
