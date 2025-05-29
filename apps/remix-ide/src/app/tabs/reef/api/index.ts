@@ -64,19 +64,23 @@ export const verifyContract = async (deployedContract: Contract, contract: ReefC
   }
 
   notify(`Verifying ${contractName} contract...`);
+
+  console.log("body=== 2",compilerState.lastCompilationResult.source.sources[filename].content);
   try {
     const body: VerificationContractReq = {
       address: deployedContract.target as any,
       arguments: JSON.stringify(arg),
       name: contractName,
-      filename: filename,
+      filename: `${filename.split('/')[filename.split('/').length-1]}`,
       target: `${compilerState.evmVersion??'london'}`,
-      source: compilerState.lastCompilationResult.source.sources[filename].content,
+      source: JSON.stringify(Object.fromEntries(Object.entries(compilerState.lastCompilationResult.source.sources).map(([k, v]) => [k.split('/').pop(), (v as any).content]))),
       optimization: `${compilerState.optimize}`,
-      compilerVersion: `v${compilerState.currentVersion}`,
-      license: compilerState.compilerLicense,
+      compilerVersion: `v${compilerState.currentVersion.replace(/(\+commit\.[a-f0-9]+).*/, '$1')}`,
+      license: `${compilerState.lastCompilationResult.source.sources[filename].content.match(/SPDX-License-Identifier:\s*([^\s]+)/i)?.[1] || "UNLICENSED"}`,
       runs: compilerState.runs
     };
+
+    console.log("body===",body);
 
     await waitUntilContractExists(url, deployedContract.target as any);
     console.log("Contract was detected");
