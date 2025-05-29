@@ -74,7 +74,7 @@ export const verifyContract = async (deployedContract: Contract, contract: ReefC
       source: compilerState.lastCompilationResult.source.sources[filename].content,
       optimization: `${compilerState.optimize}`,
       compilerVersion: `v${compilerState.currentVersion}`,
-      license: "unlicense",
+      license: compilerState.compilerLicense,
       runs: compilerState.runs
     };
 
