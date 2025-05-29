@@ -122,7 +122,7 @@ export const Constructor = ({signers,contracts,deployedContracts,selectedSigner,
       {selectedSigner? (
         <>
           <Deploy contractName={selectedContract} contracts={contracts} deploying={deploying} setDeploying={setDeploying} selectedReefSigner={selectedSigner} sources={sources} notify={notify} network={network} deployedContracts={deployedContracts} setDeployedContracts={setDeployedContracts} compilerState={compilerState}/>
-          <DeployedContracts contracts={deployedContracts} notify={notify} />
+          <DeployedContracts contracts={deployedContracts} notify={notify} setDeployedContracts={setDeployedContracts} />
         </>
       ) : (
         <div className="text-danger pt-3 text">

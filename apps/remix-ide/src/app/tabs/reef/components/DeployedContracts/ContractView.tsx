@@ -10,14 +10,24 @@ interface ContractViewProps extends ContractHolder {
   index: number;
   notify:any;
   contracts:any;
+  setDeployedContracts:any;
 }
 
 const ContractView = (params : ContractViewProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
-  // todo anukul remove this dispatch
-  const onRemove = () => console.log("sdfsd");
+
+  const onRemove = () => {
+    let updatedDeployedContracts = [];
+    params.contracts.forEach((deployedContract:any)=>{
+      if((params.contract as any).contract.target!=deployedContract.contract.target){
+        updatedDeployedContracts.push(deployedContract)
+      }
+    })
+    params.setDeployedContracts(updatedDeployedContracts);
+  }
+
 
   return (
     <div className="mt-1">
