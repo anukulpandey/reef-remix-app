@@ -13,7 +13,6 @@ interface ContractViewProps extends ContractHolder {
 }
 
 const ContractView = (params : ContractViewProps) => {
-  console.log("params===",params);
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
