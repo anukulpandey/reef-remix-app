@@ -78,12 +78,6 @@ function ReefTab({ plugin}: { plugin: ReefPlugin }) {
     };
   }, [plugin]);
   
-
-  console.log({
-    loading,
-    error,
-    signers,
-    value:loading && !error && signers})
   return (
     <div id="reefTab" style={{ padding: '1rem' }}>
       {network && <NetworkSelect reefState={reefState} network={network}/>}
