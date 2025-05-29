@@ -170,7 +170,7 @@ export const migrationTestData = {
           },
           '.workspaces/workspace_test/test_contracts': {
             children: {
-              '.workspaces/workspace_test/test_contracts/1_Storage.sol': {
+              '.workspaces/workspace_test/test_contracts/1_Owner.sol': {
                 content: 'testing'
               },
               '.workspaces/workspace_test/test_contracts/artifacts': {

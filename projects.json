@@ -605,10 +605,6 @@
               "hash": "b2a56f23717b4b9b8f05d45363a0fd58c657ce6e"
             },
             {
-              "file": "libs/remix-ws-templates/src/templates/remixDefault/contracts/1_Storage.sol",
-              "hash": "dd1e15d25e783b6eb2149c024787678c663616f7"
-            },
-            {
               "file": "libs/remix-ws-templates/src/templates/remixDefault/contracts/2_Owner.sol",
               "hash": "9949f8cdd6db2acc9bbe98a13e4b89c5e53f9827"
             },

@@ -1,6 +1,5 @@
-// SPDX-License-Identifier: GPL-3.0
-
-pragma solidity >=0.7.0 <0.9.0;
+//SPDX-License-Identifier:MIT
+pragma solidity >=0.7.4;
 
 import "hardhat/console.sol";
 
@@ -32,6 +31,7 @@ contract Owner {
     constructor() {
         console.log("Owner contract deployed by:", msg.sender);
         owner = msg.sender; // 'msg.sender' is sender of current call, contract deployer for a constructor
+        
         emit OwnerSet(address(0), owner);
     }
 

@@ -12,12 +12,12 @@ module.exports = {
   'Should add error marker': function (browser: NightwatchBrowser) {
     browser
     .openFile('contracts')
-    .openFile('contracts/1_Storage.sol')
+    .openFile('contracts/1_Owner.sol')
     .addFile('scripts/adderror.ts', {content: addErrorMarker})
     .pause(4000)
     .executeScriptInTerminal('remix.exeCurrent()')
     .pause(4000)
-    .openFile('contracts/1_Storage.sol')
+    .openFile('contracts/1_Owner.sol')
     .useXpath()
     .waitForElementVisible("//*[@class='cdr squiggly-error']")
     .waitForElementVisible("//*[@class='cdr squiggly-warning']")
@@ -29,7 +29,7 @@ module.exports = {
     .pause(4000)
     .executeScriptInTerminal('remix.exeCurrent()')
     .pause(4000)
-    .openFile('contracts/1_Storage.sol')
+    .openFile('contracts/1_Owner.sol')
     .useXpath()
     .waitForElementNotPresent("//*[@class='cdr squiggly-error']")
     .waitForElementNotPresent("//*[@class='cdr squiggly-warning']")
@@ -38,7 +38,7 @@ module.exports = {
 
 const clearMarkers =`
 (async () => {
-    await remix.call('editor', 'clearErrorMarkers' as any, ['contracts/1_Storage.sol'])
+    await remix.call('editor', 'clearErrorMarkers' as any, ['contracts/1_Owner.sol'])
 })()`
 
 const addErrorMarker = `

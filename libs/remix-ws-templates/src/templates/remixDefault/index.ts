@@ -1,11 +1,7 @@
 export default async () => {
   return {
     // @ts-ignore
-    'contracts/1_Storage.sol': (await import('raw-loader!./contracts/1_Storage.sol')).default,
-    // @ts-ignore
-    'contracts/2_Owner.sol': (await import('raw-loader!./contracts/2_Owner.sol')).default,
-    // @ts-ignore
-    'contracts/3_Ballot.sol': (await import('raw-loader!./contracts/3_Ballot.sol')).default,
+    'contracts/1_Owner.sol': (await import('raw-loader!./contracts/1_Owner.sol')).default,
     // @ts-ignore
     'scripts/deploy_with_ethers.ts': (await import('!!raw-loader!./scripts/deploy_with_ethers.ts')).default,
     // @ts-ignore

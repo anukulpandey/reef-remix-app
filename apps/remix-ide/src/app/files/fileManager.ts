@@ -459,7 +459,7 @@ export default class FileManager extends Plugin {
   /**
    * Get the list of files in the directory
    * @param {string} path path of the directory
-   * @returns {Object} list of the file/directory name in this directory e.g; {contracts/1_Storage.sol:{isDirectory: false}}
+   * @returns {Object} list of the file/directory name in this directory e.g; {contracts/1_Owner.sol:{isDirectory: false}}
    */
   async readdir(path): Promise<Record<string, Record<string, boolean>>> {
     try {

@@ -102,7 +102,7 @@ export class CompilerArtefacts extends Plugin {
    * Get a particular contract output/artefacts from a compiler output of a Solidity file compilation
    * @param compilerOutput compiler output
    * @param contractName contract name
-   * @returns artefacts object, with fully qualified name (e.g; contracts/1_Storage.sol:Storage) as key
+   * @returns artefacts object, with fully qualified name (e.g; contracts/1_Owner.sol:Storage) as key
    */
   _getAllContractArtefactsfromOutput(compilerOutput, contractName) {
     const contractArtefacts = {}
@@ -116,7 +116,7 @@ export class CompilerArtefacts extends Plugin {
    * Populate resultant object with a particular contract output/artefacts by processing all the artifacts stored in file explorer
    * @param path path to start looking from
    * @param contractName contract to be looked for
-   * @param contractArtefacts populated resultant artefacts object, with fully qualified name (e.g: contracts/1_Storage.sol:Storage) as key
+   * @param contractArtefacts populated resultant artefacts object, with fully qualified name (e.g: contracts/1_Owner.sol:Storage) as key
    * Once method execution completes, contractArtefacts object will hold all possible artefacts for contract
    */
   async _populateAllContractArtefactsFromFE(path, contractName, contractArtefacts) {
@@ -142,7 +142,7 @@ export class CompilerArtefacts extends Plugin {
 
   /**
    * Get artefacts for a contract (called by script-runner)
-   * @param name contract name or fully qualified name i.e. <filename>:<contractname> e.g: contracts/1_Storage.sol:Storage
+   * @param name contract name or fully qualified name i.e. <filename>:<contractname> e.g: contracts/1_Owner.sol:Owner
    * @returns artefacts for the contract
    */
   async getArtefactsByContractName(name) {
