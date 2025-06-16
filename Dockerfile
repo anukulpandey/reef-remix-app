@@ -25,5 +25,9 @@ WORKDIR /app
 COPY package.json yarn.lock ./
 RUN yarn install
 COPY . .
+
+ENV NODE_OPTIONS="--max-old-space-size=10096"
+RUN yarn build:production
+CMD ["yarn", "run", "serve:production"]
+
 EXPOSE 8080
-CMD ["yarn", "serve"]
